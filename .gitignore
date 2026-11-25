@@ -1,0 +1,21 @@
+# Izračuni i radne datoteke Quantum ESPRESSA
+/racuni/
+/engine/
+/tmp/
+*.log
+
+# Lokalna okolina i privremeni izlazi
+.venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.env
+.env.*
+*.aux
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
+# Arhive za prijenos
+/*.zip
+/*.bundle

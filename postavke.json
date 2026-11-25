@@ -1,0 +1,19 @@
+{
+  "temperatures_K": [100, 200, 400, 800, 1200, 1600],
+  "a_A": 3.54,
+  "c_A": 23.10518101,
+  "se_height_A": 1.55,
+  "ecutwfc_Ry": 60,
+  "ecutrho_Ry": 600,
+  "k_mesh": 24,
+  "q_mesh": 6,
+  "bands_per_formula_unit": 20,
+  "conv_thr_Ry": 1e-10,
+  "phonon_threshold": 1e-14,
+  "force_threshold_Ry_Bohr": 0.00005,
+  "random_seed": 731,
+  "random_rms_A": 0.03,
+  "path_steps_per_segment": 30,
+  "amplitudes_A": [-0.16, -0.12, -0.09, -0.06, -0.03, -0.01, 0.0, 0.01, 0.03, 0.06, 0.09, 0.12, 0.16],
+  "instability_threshold_THz": 0.05
+}
