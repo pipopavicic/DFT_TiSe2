@@ -68,6 +68,31 @@ U standardnom korisničkom PowerShellu cijelu seriju možeš pokrenuti i s `.\Po
 
 Za praćenje već pokrenute cijele serije iz drugog terminala postoji i `python studija.py watch`. Osvježava `PREGLED.md`, tablice i grafove čim pojedina faza završi i izlazi kada se serija zaustavi.
 
+### Javni status računa na Srcu
+
+Temperaturu, aktivni korak, trajanje procesa, dovršene q-točke i slobodan disk možeš pratiti bez prijave. Pri svakom očitanju ažurira se ista [stranica na GitHubu](https://github.com/pipopavicic/DFT_TiSe2/issues/1).
+
+1. Na svojem računalu otvori [obrazac za GitHub token](https://github.com/settings/personal-access-tokens/new?name=TiSe2-status&target_name=pipopavicic&expires_in=30&issues=write). Odaberi **Only select repositories → DFT_TiSe2**, provjeri **Issues → Read and write** i klikni **Generate token**.
+2. Dok račun radi, na istom Jupyter poslužitelju otvori **novu Python bilježnicu sa zasebnim kernelom**. Ako već imaš `github_status.py` u projektu, pokreni ćeliju ispod.
+
+```python
+%cd ~/zadatak/DFT_TiSe2
+%run github_status.py racuni/k24_q6_17503ad3bf
+```
+
+3. Kad se pojavi skriveno polje za token, zalijepi ga i pritisni Enter. Prva se objava šalje odmah, a sljedeće svakih 20 minuta. Svako se očitanje ispisuje i u bilježnici. Q-točka se broji nakon ispisa svih devet frekvencija u `mesh.out`.
+
+Ako na Srcu još nemaš skriptu, možeš je samostalno preuzeti dok disperzija radi. Umjesto gornje ćelije pokreni ovu.
+
+```python
+%cd ~/zadatak/DFT_TiSe2
+from urllib.request import urlretrieve
+skripta, _ = urlretrieve("https://raw.githubusercontent.com/pipopavicic/DFT_TiSe2/main/github_status.py")
+%run "$skripta" racuni/k24_q6_17503ad3bf
+```
+
+Praćenje se samo završava nakon oko 90 sekundi bez aktivnog procesa te studije. Završna objava prikazuje dokle se stiglo i nakon urednog završetka i nakon prekida. Ako se ugasi cijela virtualka, na stranici ostaje posljednje poslano očitanje. Nakon nastavka računa ponovno pokreni ćeliju za praćenje. Za samo jedan lokalni pregled možeš dodati `--preview` na kraj naredbe `%run`.
+
 ### Ako prenosiš paket na drugo računalo
 
 Paket sadrži oba točna i provjerena UPF pseudopotencijala. U novom Python okruženju instaliraj ovisnosti s `python -m pip install -r requirements.txt`. Na Windowsu naredba `python instaliraj_qe_windows.py` preuzima provjereno prijenosno izdanje QE 7.5 u lokalnu mapu `engine`. Na Linuxu je dovoljan Quantum ESPRESSO s programima `pw.x`, `ph.x`, `q2r.x`, `matdyn.x` i `dynmat.x` u putanji. Varijabla `QE_BIN` može označiti i posebnu mapu tih programa. Na ovom računalu prijenosno izdanje već je pripremljeno.
