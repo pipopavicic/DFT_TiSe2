@@ -143,6 +143,16 @@ Uz zadanog jednog radnika skripta dovrši M, disperziju, potencijale i relaksira
 
 Periodični ispis u bilježnici i `rezultati/status.log` prikazuju i trenutačno slobodan prostor u GiB. Taj ispis uzorkuje stanje svakih 20 minuta. Za provjeru u bilo kojem trenutku u terminalu upiši `df -h "$HOME"`. Ako jedan aktivni račun traži više prostora ili RAM-a nego što poslužitelj daje, potreban je veći radni prostor ili drugi računalni resurs.
 
+### Nastavak disperzije nakon punog diska na Srcu
+
+Ako je `ph.x` prekinut usred mreže, `nastavi_mesh.py` provjerava q-koordinatu, svih devet frekvencija i završetak svake datoteke `mesh.dynN`. Čita izvorni `mesh.in` i mrežu iz `mesh.dyn0`. Postojeći `mesh.out` ostaje zapis prvog pokušaja.
+
+1. Dok je račun zaustavljen, u terminalu iz mape projekta pokreni `python -B nastavi_mesh.py racuni/k24_q6_17503ad3bf 1200 --premjesti --od-q 6`. Opcija `--od-q 6` zahtijeva pet čitljivih matrica prije nastavka. Ako je kućni disk pun i skripta je preuzeta u `/tmp`, zadaj njezinu punu putanju. Priprema prenosi regularne radne datoteke od najmanje 1 MiB iz prekinutog `tmp/_ph0` u novu privatnu mapu na `/tmp`. Svaki se izvornik uklanja tek nakon usporedbe sadržaja s kopijom. Izvorni `tmp/tise2.save`, podaci u `*.phsave` i već gotove matrice ostaju na trajnom disku. Srce može ukloniti sadržaj `/tmp` gašenjem virtualke. Prikazani slobodni prostor na tom disku dijele i drugi poslovi.
+2. Priprema ispiše naredbu `%run` za Python bilježnicu. Ona izvede samo nedostajuće q-točke, jednu po jednu, uz isti elektronski osnovni račun i istu punu q-mrežu. `start_q` i `last_q` odabiru jednu točku. Svaki novi `ph.x` ima vlastitu kopiju SCF-a na radnom disku. Potvrđena matrica vraća se na trajni disk prije sljedeće točke. Ako se nastavak prekine, ponovno pokreni istu ćeliju.
+3. Kad sve matrice budu dostupne, skripta pokrene `q2r.x` i `matdyn.x`, spremi `fononi_1x1/disperzija.csv` i `minimum.json`, te osvježi graf u `rezultati/disperzija_1200K.png`. Ovaj postupak obrađuje odabranu temperaturu. Za praćenje preko GitHuba pokreni drugu ispisanu naredbu u zasebnoj Python bilježnici. Novija verzija prati i matrice dovršene nastavkom.
+
+Opcija `--scratch /put/do/radnog/diska` omogućuje drugi radni disk u oba koraka. Na Srcu je zadana putanja `/tmp`.
+
 ## Organizacija koda i izlaza
 
 | Datoteka | Što u njoj potražiti |

@@ -41,6 +41,22 @@ LAST_MODE = re.compile(r"^\s*freq\s*\(\s*9\s*\)\s*=")
 
 def q_progress(log):
     """Za svaki q primitivne ćelije TiSe2 brojimo zadnju od devet grana."""
+    if (log.parent / "nastavak_q").is_dir():
+        # Nastavak ima zasebne QE ispise. Potvrđene matrice svih dijelova
+        # nalaze se zajedno uz izvornu mesh.dyn0 i ostaju nakon prekida.
+        try:
+            with (log.parent / "mesh.dyn0").open() as grid:
+                next(grid)
+                total = int(next(grid))
+            done = 0
+            for iq in range(1, total + 1):
+                matrix = log.parent / f"mesh.dyn{iq}"
+                if matrix.is_file():
+                    with matrix.open(encoding="utf-8", errors="replace") as src:
+                        done += any(LAST_MODE.match(line) for line in src)
+            return f"{done}/{total} q"
+        except (OSError, ValueError, StopIteration):
+            pass
     total, done = None, 0
     counted = False
     try:
@@ -63,6 +79,8 @@ def q_progress(log):
 def stage_name(parts, input_name):
     folder = parts[0]
     if folder == "fononi_1x1":
+        if len(parts) == 3 and parts[1] == "nastavak_q" and re.fullmatch(r"q\d+", parts[2]):
+            return f"Disperzija 1×1, q {int(parts[2][1:])}"
         return {
             "scf.in": "SCF 1×1", "M.in": "Fonon u M", "mesh.in": "Disperzija 1×1",
             "q2r.in": "Konstante sila 1×1", "matdyn.in": "Interpolacija disperzije",
